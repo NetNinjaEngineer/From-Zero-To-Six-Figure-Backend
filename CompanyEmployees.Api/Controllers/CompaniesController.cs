@@ -9,14 +9,14 @@ public class CompaniesController(IServiceManager serviceManager) : ControllerBas
     [HttpGet]
     public async Task<IActionResult> GetCompanies(bool trackChanges)
     {
-        try
-        {
-            var companies = await serviceManager.CompanyService.GetCompanies(trackChanges);
-            return Ok(companies);
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, "Internal server error");
-        }
+        var companies = await serviceManager.CompanyService.GetCompanies(trackChanges);
+        return Ok(companies);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetCompany(Guid id)
+    {
+        var company = await serviceManager.CompanyService.GetCompany(id);
+        return Ok(company);
     }
 }

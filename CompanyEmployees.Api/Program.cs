@@ -1,4 +1,5 @@
 using CompanyEmployees.Api.Extensions;
+using CompanyEmployees.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.RegisterApplicationServices(builder.Configuration);
 
 var app = builder.Build();
+var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<ILogger>();
+app.ConfigureExceptionHandler(logger);
 
 if (app.Environment.IsDevelopment())
 {

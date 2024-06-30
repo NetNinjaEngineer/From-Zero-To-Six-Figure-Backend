@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Contracts;
+using Entities.Exceptions;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -21,5 +22,13 @@ public sealed class CompanyService : ICompanyService
     {
         var companies = await _repositoryManager.CompanyRepository.GetAllCompanies(trackChanges);
         return _mapper.Map<IEnumerable<CompanyDto>>(companies);
+    }
+
+    public async Task<CompanyDto?> GetCompany(Guid companyId)
+    {
+        var company = await _repositoryManager.CompanyRepository.GetCompany(companyId);
+        if (company is not null)
+            return _mapper.Map<CompanyDto>(company);
+        throw new NotFoundException($"Company with '{companyId}' was not found.");
     }
 }
