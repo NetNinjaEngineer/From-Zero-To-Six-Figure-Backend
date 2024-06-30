@@ -29,6 +29,6 @@ public sealed class CompanyService : ICompanyService
         var company = await _repositoryManager.CompanyRepository.GetCompany(companyId);
         if (company is not null)
             return _mapper.Map<CompanyDto>(company);
-        throw new NotFoundException($"Company with '{companyId}' was not found.");
+        throw new CompanyNotFoundException(companyId);
     }
 }
