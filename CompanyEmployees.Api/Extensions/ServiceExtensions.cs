@@ -32,6 +32,7 @@ public static class ServiceExtensions
         services.AddScoped<IRepositoryManager, RepositoryManager>();
 
         services.AddScoped<IServiceManager, ServiceManager>();
+        services.AddAutoMapper(typeof(MappingProfile));
 
         return services;
     }

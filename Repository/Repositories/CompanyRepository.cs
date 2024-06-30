@@ -2,7 +2,9 @@
 using Entities.Models;
 
 namespace Repository.Repositories;
-public class CompanyRepository(ApplicationDbContext context)
+public sealed class CompanyRepository(ApplicationDbContext context)
     : GenericRepository<Company>(context), ICompanyRepository
 {
+    public async Task<IEnumerable<Company>> GetAllCompanies(bool trackChanges)
+        => await (GetAll(trackChanges));
 }

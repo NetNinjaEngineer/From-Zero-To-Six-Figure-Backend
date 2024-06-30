@@ -1,17 +1,17 @@
-﻿using Contracts;
-using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using Contracts;
 using Service.Contracts;
 
 namespace Service;
-public sealed class ServiceManager(ILogger logger, IRepositoryManager repository) : IServiceManager
+public sealed class ServiceManager(
+    IRepositoryManager repository,
+    IMapper mapper) : IServiceManager
 {
-    private readonly ILogger _logger = logger;
-
     private readonly Lazy<ICompanyService> _companyService = new(
-        () => new CompanyService(repository, logger));
+        () => new CompanyService(mapper, repository));
 
     private readonly Lazy<IEmployeeService> _employeeService = new(
-        () => new EmployeeService(repository, logger));
+        () => new EmployeeService(mapper, repository));
     private readonly IRepositoryManager _repository = repository;
 
     public ICompanyService CompanyService => _companyService.Value;
