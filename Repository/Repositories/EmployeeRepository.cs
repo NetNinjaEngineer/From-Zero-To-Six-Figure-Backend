@@ -12,6 +12,8 @@ public class EmployeeRepository(ApplicationDbContext context)
         Create(employee);
     }
 
+    public void DeleteEmployee(Employee employee) => Delete(employee);
+
     public async Task<IEnumerable<Employee>> GetEmployeesForCompany(
         Guid companyId, bool trackChanges)
     {
@@ -26,4 +28,6 @@ public class EmployeeRepository(ApplicationDbContext context)
             e.CompanyId.Equals(companyId) && e.Id.Equals(id), false);
         return employees.SingleOrDefault()!;
     }
+
+    public void UpdateEmployee(Employee employee) => Update(employee);
 }

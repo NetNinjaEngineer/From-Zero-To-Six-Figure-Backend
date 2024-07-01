@@ -27,6 +27,19 @@ public sealed class EmployeeService(
         return employeeToReturn;
     }
 
+    public async Task DeleteEmployeeForCompany(Guid companyId, Guid id)
+    {
+        if (!await CheckValidCompany(companyId))
+            throw new CompanyNotFoundException(companyId);
+
+        var employeeForCompany = await _repository.EmployeeRepository
+            .GetSingleEmployeeForCompany(companyId, id)
+            ?? throw new EmployeeNotFoundException(id);
+
+        _repository.EmployeeRepository.Delete(employeeForCompany);
+        _repository.Save();
+    }
+
     public async Task<EmployeeDto> GetEmployeeForCompany(Guid companyId, Guid employeeId)
     {
         if (!await CheckValidCompany(companyId))
@@ -49,6 +62,27 @@ public sealed class EmployeeService(
             .GetEmployeesForCompany(companyId, trackChanges);
 
         return _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+    }
+
+    public async Task UpdateEmployeeForCompany(Guid companyId, Guid id,
+        EmployeeForUpdateDto employeeModel)
+    {
+        if (!await CheckValidCompany(companyId))
+            throw new CompanyNotFoundException(companyId);
+
+        var existingEmployee = await _repository
+            .EmployeeRepository
+            .GetSingleEmployeeForCompany(companyId, id);
+
+        if (existingEmployee is not null)
+        {
+            _mapper.Map(employeeModel, existingEmployee);
+            _repository.EmployeeRepository.Update(existingEmployee);
+            _repository.Save();
+        }
+        else
+            throw new EmployeeNotFoundException(id);
+
     }
 
     private async Task<bool> CheckValidCompany(Guid companyId)

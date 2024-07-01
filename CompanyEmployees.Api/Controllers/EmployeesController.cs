@@ -32,4 +32,22 @@ public class EmployeesController(IServiceManager service) : ControllerBase
         return CreatedAtRoute("EmployeeById", new { companyId, employeeId = createdEmployee.Id },
             createdEmployee);
     }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id)
+    {
+        await service.EmployeeService.DeleteEmployeeForCompany(companyId, id);
+        return NoContent();
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateEmployeeForCompany(
+        Guid companyId,
+        Guid id,
+        EmployeeForUpdateDto employeeModel)
+    {
+        await service.EmployeeService.UpdateEmployeeForCompany(companyId, id, employeeModel);
+        return NoContent();
+
+    }
 }

@@ -17,4 +17,6 @@ public sealed class CompanyRepository(ApplicationDbContext context)
     }
     public async Task<Company?> GetCompany(Guid id)
         => await (GetById(id));
+
+    public void DeleteCompany(Company company) => Delete(company);
 }

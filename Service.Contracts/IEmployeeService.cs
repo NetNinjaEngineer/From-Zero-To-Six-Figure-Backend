@@ -6,4 +6,6 @@ public interface IEmployeeService
     Task<IEnumerable<EmployeeDto>> GetEmployeesForCompany(Guid companyId, bool trackChanges);
     Task<EmployeeDto> GetEmployeeForCompany(Guid companyId, Guid employeeId);
     Task<EmployeeDto> CreateEmployeeForCompany(Guid companyId, EmployeeForCreationDto employee);
+    Task DeleteEmployeeForCompany(Guid companyId, Guid id);
+    Task UpdateEmployeeForCompany(Guid companyId, Guid id, EmployeeForUpdateDto employeeModel);
 }

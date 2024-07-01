@@ -9,4 +9,9 @@ public interface ICompanyService
     Task<IEnumerable<CompanyDto>> GetCompaniesByIds(IEnumerable<Guid> ids);
     (IEnumerable<CompanyDto> companies, string ids) CreateCompanyCollection
         (IEnumerable<CompanyForCreationDto> companyCollection);
+
+    Task DeleteCompany(Guid companyId);
+    Task UpdateCompany(Guid companyid, CompanyForUpdateDto companyForUpdate);
+
+
 }

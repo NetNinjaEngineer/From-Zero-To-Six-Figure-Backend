@@ -40,4 +40,22 @@ public class CompaniesController(IServiceManager service) : ControllerBase
         var result = service.CompanyService.CreateCompanyCollection(companies);
         return CreatedAtRoute("CompanyCollection", new { result.ids }, new { result.companies });
     }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteCompany(Guid id)
+    {
+        await service.CompanyService.DeleteCompany(id);
+        return NoContent();
+    }
+
+    [HttpPut("{companyId:guid}")]
+    public async Task<IActionResult> UpdateCompany(Guid companyId, CompanyForUpdateDto companyForUpdate)
+    {
+        if (companyForUpdate is null)
+            return BadRequest("CompanyForUpdateDto object is null");
+
+        await service.CompanyService.UpdateCompany(companyId, companyForUpdate);
+        return NoContent();
+
+    }
 }

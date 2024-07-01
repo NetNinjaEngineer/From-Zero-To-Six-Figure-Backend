@@ -7,4 +7,5 @@ public interface ICompanyRepository : IGenericRepository<Company>
     Task<Company?> GetCompany(Guid id);
     void CreateCompany(Company company);
     Task<IEnumerable<Company>> GetCompaniesByIds(IEnumerable<Guid> ids);
+    void DeleteCompany(Company company);
 }

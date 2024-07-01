@@ -47,6 +47,20 @@ public sealed class CompanyService : ICompanyService
         return (companyCollectionToReturn, ids);
     }
 
+    public async Task DeleteCompany(Guid companyId)
+    {
+        Company company = await CheckCompanyExists(companyId);
+        _repositoryManager.CompanyRepository.DeleteCompany(company);
+        _repositoryManager.Save();
+    }
+
+    private async Task<Company> CheckCompanyExists(Guid companyId)
+    {
+        return await _repositoryManager.CompanyRepository
+            .GetCompany(companyId)
+            ?? throw new CompanyNotFoundException(companyId);
+    }
+
     public async Task<IEnumerable<CompanyDto>> GetCompanies(bool trackChanges)
     {
         var companies = await _repositoryManager.CompanyRepository.GetAllCompanies(trackChanges);
@@ -70,5 +84,14 @@ public sealed class CompanyService : ICompanyService
         if (company is not null)
             return _mapper.Map<CompanyDto>(company);
         throw new CompanyNotFoundException(companyId);
+    }
+
+    public async Task UpdateCompany(Guid companyid,
+        CompanyForUpdateDto companyForUpdate)
+    {
+        Company company = await CheckCompanyExists(companyid);
+        _mapper.Map(companyForUpdate, company);
+        _repositoryManager.CompanyRepository.Update(company);
+        _repositoryManager.Save();
     }
 }
