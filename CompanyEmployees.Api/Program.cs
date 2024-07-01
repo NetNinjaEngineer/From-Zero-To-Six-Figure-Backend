@@ -1,9 +1,17 @@
+using CompanyEmployees;
 using CompanyEmployees.Api.Extensions;
 using CompanyEmployees.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(config =>
+{
+    config.RespectBrowserAcceptHeader = true;
+    config.ReturnHttpNotAcceptable = true;
+    config.OutputFormatters.Add(new GenericCsvOutputFormatter());
+})
+    .AddXmlDataContractSerializerFormatters();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.RegisterApplicationServices(builder.Configuration);
