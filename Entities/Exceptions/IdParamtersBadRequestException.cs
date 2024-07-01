@@ -1,0 +1,1 @@
+public class IdParamtersBadRequestException() : BadRequestException("Parameter ids is null");

@@ -25,5 +25,17 @@ public class CompaniesController(IServiceManager service) : ControllerBase
         return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
     }
 
+    [HttpGet("collection/({ids})", Name = "CompanyCollection")]
+    public async Task<IActionResult> GetCompaniesCollection([FromRoute] IEnumerable<Guid> ids)
+    {
+        var companies = await service.CompanyService.GetCompaniesByIds(ids);
+        return Ok(companies);
+    }
 
+    [HttpPost("collection")]
+    public IActionResult CreateCompanyCollection(IEnumerable<CompanyForCreationDto> companies)
+    {
+        var result = service.CompanyService.CreateCompanyCollection(companies);
+        return CreatedAtRoute("CompanyCollection", new { result.ids }, new { result.companies });
+    }
 }
