@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CompanyEmployees.ModelBinders;
+using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -26,7 +27,8 @@ public class CompaniesController(IServiceManager service) : ControllerBase
     }
 
     [HttpGet("collection/({ids})", Name = "CompanyCollection")]
-    public async Task<IActionResult> GetCompaniesCollection([FromRoute] IEnumerable<Guid> ids)
+    public async Task<IActionResult> GetCompaniesCollection(
+        [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
     {
         var companies = await service.CompanyService.GetCompaniesByIds(ids);
         return Ok(companies);
