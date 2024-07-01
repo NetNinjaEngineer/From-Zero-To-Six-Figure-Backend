@@ -6,6 +6,12 @@ namespace Repository.Repositories;
 public class EmployeeRepository(ApplicationDbContext context)
     : GenericRepository<Employee>(context), IEmployeeRepository
 {
+    public void CreateEmployeeForCompany(Guid companyId, Employee employee)
+    {
+        employee.CompanyId = companyId;
+        Create(employee);
+    }
+
     public async Task<IEnumerable<Employee>> GetEmployeesForCompany(
         Guid companyId, bool trackChanges)
     {

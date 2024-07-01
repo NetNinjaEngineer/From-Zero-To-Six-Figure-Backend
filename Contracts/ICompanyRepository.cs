@@ -5,4 +5,5 @@ public interface ICompanyRepository : IGenericRepository<Company>
 {
     Task<IEnumerable<Company>> GetAllCompanies(bool trackChanges);
     Task<Company?> GetCompany(Guid id);
+    void CreateCompany(Company company);
 }

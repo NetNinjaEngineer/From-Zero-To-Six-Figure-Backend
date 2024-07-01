@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Repository.Repositories;
@@ -33,6 +34,11 @@ public static class ServiceExtensions
 
         services.AddScoped<IServiceManager, ServiceManager>();
         services.AddAutoMapper(typeof(MappingProfile));
+
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
 
         return services;
     }

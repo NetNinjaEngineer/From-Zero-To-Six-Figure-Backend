@@ -5,6 +5,8 @@ namespace Repository.Repositories;
 public sealed class CompanyRepository(ApplicationDbContext context)
     : GenericRepository<Company>(context), ICompanyRepository
 {
+    public void CreateCompany(Company company) => Create(company);
+
     public async Task<IEnumerable<Company>> GetAllCompanies(bool trackChanges)
         => await (GetAll(trackChanges));
 

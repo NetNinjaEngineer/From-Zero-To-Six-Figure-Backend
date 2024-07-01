@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.Exceptions;
+using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -13,6 +14,18 @@ public sealed class EmployeeService(
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRepositoryManager _repository = repository;
+
+    public async Task<EmployeeDto> CreateEmployeeForCompany(Guid companyId,
+        EmployeeForCreationDto employee)
+    {
+        if (!await CheckValidCompany(companyId))
+            throw new CompanyNotFoundException(companyId);
+        var employeeForCreation = _mapper.Map<Employee>(employee);
+        _repository.EmployeeRepository.CreateEmployeeForCompany(companyId, employeeForCreation);
+        _repository.Save();
+        var employeeToReturn = _mapper.Map<EmployeeDto>(employeeForCreation);
+        return employeeToReturn;
+    }
 
     public async Task<EmployeeDto> GetEmployeeForCompany(Guid companyId, Guid employeeId)
     {
