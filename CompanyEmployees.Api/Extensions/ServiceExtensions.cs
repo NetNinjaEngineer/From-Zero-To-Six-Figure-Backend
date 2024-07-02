@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using CompanyEmployees.ActionFilters;
+using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repository;
@@ -39,6 +40,8 @@ public static class ServiceExtensions
         {
             options.SuppressModelStateInvalidFilter = true;
         });
+
+        services.AddScoped<ValidationActionFilter>();
 
         return services;
     }
