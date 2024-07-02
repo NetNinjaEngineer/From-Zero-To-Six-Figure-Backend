@@ -1,5 +1,7 @@
 ﻿using Contracts;
 using Entities.Models;
+using Repository.Extensions;
+using Shared.RequestFeatures;
 
 namespace Repository.Repositories;
 
@@ -20,6 +22,19 @@ public class EmployeeRepository(ApplicationDbContext context)
         var employees = await FindByCondition(employee =>
             employee.CompanyId.Equals(companyId), trackChanges);
         return employees;
+    }
+
+    public async Task<PagedList<Employee>> GetEmployeesForCompany(Guid companyId, EmployeeParameters parameters, bool trackChanges)
+    {
+        var employees = await FindByCondition(e =>
+            e.CompanyId.Equals(companyId), trackChanges);
+
+        var result = employees
+        .FilterEmployees(parameters.MinAge, parameters.MaxAge)
+        .Search(parameters.SearchTerm!);
+
+        return PagedList<Employee>.ToPagedList(result, parameters.PageNumber, parameters.PageSize);
+
     }
 
     public async Task<Employee> GetSingleEmployeeForCompany(Guid companyId, Guid id)

@@ -1,0 +1,28 @@
+﻿namespace Shared.RequestFeatures;
+public class PagedList<T> : List<T>
+{
+    public MetaData MetaData { get; set; }
+
+    public PagedList(List<T> items, int pageNumber, int pageSize, int count)
+    {
+        MetaData = new MetaData
+        {
+            CurrentPage = pageNumber,
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+            TotalCount = count
+        };
+
+        AddRange(items);
+    }
+
+    public static PagedList<T> ToPagedList(IEnumerable<T> source, int pageNumber, int pageSize)
+    {
+        var items = source
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        return new PagedList<T>(items, pageNumber, pageSize, source.Count());
+    }
+}

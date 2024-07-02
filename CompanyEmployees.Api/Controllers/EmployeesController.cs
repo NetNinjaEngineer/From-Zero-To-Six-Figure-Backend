@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
+using System.Text.Json;
 
 namespace CompanyEmployees.Controllers;
 [Route("api/companies/{companyId:guid}/employees")]
@@ -9,11 +11,15 @@ namespace CompanyEmployees.Controllers;
 public class EmployeesController(IServiceManager service) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetEmployeesForCompany(Guid companyId)
+    public async Task<IActionResult> GetEmployeesForCompany(Guid companyId,
+        [FromQuery] EmployeeParameters employeeParameters)
     {
-        var employee = await service.EmployeeService
-            .GetEmployeesForCompany(companyId, false);
-        return Ok(employee);
+        var pagedResult = await service.EmployeeService.GetEmployeesForCompany(companyId,
+         employeeParameters, trackChanges: false);
+
+        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+
+        return Ok(pagedResult.employees);
     }
 
     [HttpGet("{employeeId:guid}", Name = "EmployeeById")]

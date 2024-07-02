@@ -4,6 +4,7 @@ using Entities.Exceptions;
 using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service;
 
@@ -62,6 +63,23 @@ public sealed class EmployeeService(
             .GetEmployeesForCompany(companyId, trackChanges);
 
         return _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+    }
+
+    public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesForCompany(
+        Guid companyId, EmployeeParameters parameters, bool trackChanges)
+    {
+        if (!await CheckValidCompany(companyId))
+            throw new CompanyNotFoundException(companyId);
+
+        if (!parameters.ValidAgeRange)
+            throw new MaxAgeRangeBadRequestException();
+
+        var employeesWithMetaData = await _repository.EmployeeRepository
+            .GetEmployeesForCompany(companyId, parameters, trackChanges);
+
+        var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
+
+        return (employees: employeesDto, metaData: employeesWithMetaData.MetaData);
     }
 
     public async Task UpdateEmployeeForCompany(Guid companyId, Guid id,
